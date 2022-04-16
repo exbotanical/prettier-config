@@ -13,7 +13,6 @@
     ".prettierignore"
   ],
   "main": "index.js",
-  "private": true,
   "scripts": {
     "format": "prettier --write .",
     "lint": "eslint . --fix",
