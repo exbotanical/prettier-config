@@ -1,0 +1,33 @@
+{
+  "name": "@magister_zito/prettier-config",
+  "version": "0.0.1",
+  "description": "Shared prettier configurations",
+  "keywords": [
+    "prettier",
+    "prettier-config"
+  ],
+  "license": "MIT",
+  "author": "Matthew Zito <matthewtzito@gmail.com> (goldmund)",
+  "files": [
+    "index.js",
+    ".prettierignore"
+  ],
+  "main": "index.js",
+  "private": true,
+  "scripts": {
+    "format": "prettier --write .",
+    "lint": "eslint . --fix",
+    "preinstall": "npx only-allow pnpm",
+    "prep": "pnpm lint && pnpm format && git add .",
+    "release": "bumpp package.json packages/*/package.json --commit --push --tag && pnpm -r publish --access public"
+  },
+  "devDependencies": {
+    "@magister_zito/eslint-config": "*",
+    "@magister_zito/eslint-config-javascript": "^0.11.0",
+    "bumpp": "^7.1.1",
+    "eslint": "^8.3.0",
+    "eslint-config-prettier": "8.3.0",
+    "prettier": "2.5.0"
+  },
+  "prettier": "./index.js"
+}
