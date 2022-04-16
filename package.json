@@ -19,7 +19,7 @@
     "lint": "eslint . --fix",
     "preinstall": "npx only-allow pnpm",
     "prep": "pnpm lint && pnpm format && git add .",
-    "release": "bump --commit \"feat: publish v%s \" --tag \"v%s\" --push && pnpm -r publish --access public"
+    "release": "bump --commit \"feat: publish v%s \" --tag \"v%s\" --push && pnpm publish --access public"
   },
   "devDependencies": {
     "@jsdevtools/version-bump-prompt": "^6.1.0",
