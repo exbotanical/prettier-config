@@ -16,7 +16,6 @@
   "scripts": {
     "format": "prettier --write .",
     "lint": "eslint . --fix",
-    "preinstall": "npx only-allow pnpm",
     "prep": "pnpm lint && pnpm format && git add .",
     "release": "bump --commit \"feat: publish v%s \" --tag \"v%s\" --push && pnpm publish --access public"
   },
