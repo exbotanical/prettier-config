@@ -12,9 +12,14 @@ In package.json:
 
 ```json
 {
-  // ...
   "prettier": "@magister_zito/prettier-config"
 }
+```
+
+In .prettierrc:
+
+```json
+"@magister_zito/prettier-config"
 ```
 
 Extending .prettierignore:
