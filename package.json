@@ -1,30 +1,76 @@
 {
-  "name": "@magister_zito/prettier-config",
-  "version": "0.0.5",
-  "description": "Shared prettier configurations",
+  "name": "@exbotanical/prettier-config",
+  "version": "1.0.0",
+  "description": "Zito's prettier config",
+  "author": "Matthew Zito <exbotanical@protonmail.com>",
+  "license": "MIT",
   "keywords": [
     "prettier",
     "prettier-config"
   ],
-  "license": "MIT",
-  "author": "Matthew Zito <matthewtzito@gmail.com> (goldmund)",
+  "exports": {
+    ".": "./dist/index.js"
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "files": [
-    "index.js",
-    ".prettierignore"
+    ".prettierignore",
+    "dist"
   ],
-  "main": "index.js",
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
-    "format": "prettier --write .",
-    "lint": "eslint . --fix",
-    "prep": "pnpm lint && pnpm format && git add .",
-    "release": "bump --commit \"feat: publish v%s \" --tag \"v%s\" --push && pnpm publish --access public"
+    "build": "tsup --clean --dts",
+    "lint": "eslint .",
+    "lint:fix": "npm run lint -- --fix",
+    "pretest": "npm run build",
+    "test": "vitest --run",
+    "test:dev": "vitest",
+    "prepack": "npm run build",
+    "prepare": "simple-git-hooks",
+    "typecheck": "tsc --noEmit",
+    "release": "npm publish"
+  },
+  "peerDependencies": {
+    "prettier": "^3.5.3",
+    "prettier-plugin-nginx": "^1.0.3",
+    "prettier-plugin-properties": "^0.3.0",
+    "prettier-plugin-solidity": "^1.4.2",
+    "prettier-plugin-sql": "^0.18.1"
+  },
+  "peerDependenciesMeta": {
+    "prettier-plugin-nginx": {
+      "optional": true
+    },
+    "prettier-plugin-properties": {
+      "optional": true
+    },
+    "prettier-plugin-solidity": {
+      "optional": true
+    },
+    "prettier-plugin-sql": {
+      "optional": true
+    }
+  },
+  "dependencies": {
+    "@prettier/plugin-xml": "^3.4.1",
+    "prettier": "^3.5.3",
+    "prettier-plugin-sh": "^0.15.0",
+    "prettier-plugin-toml": "^2.0.2"
   },
   "devDependencies": {
-    "@jsdevtools/version-bump-prompt": "^6.1.0",
-    "@magister_zito/eslint-config-javascript": "^0.15.0",
-    "eslint": "^8.38.0",
-    "eslint-config-prettier": "8.8.0",
-    "prettier": "2.8.7"
+    "@exbotanical/eslint-config": "^1.0.1",
+    "jiti": "^2.4.2",
+    "lint-staged": "^15.4.3",
+    "simple-git-hooks": "^2.11.1",
+    "tsup": "^8.4.0",
+    "typescript": "^5.8.2"
   },
-  "prettier": "./index.js"
+  "simple-git-hooks": {
+    "pre-commit": "npx lint-staged"
+  },
+  "lint-staged": {
+    "*": "eslint --fix"
+  }
 }

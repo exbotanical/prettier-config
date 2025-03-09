@@ -1,3 +1,0 @@
-{
-  "extends": ["@magister_zito/javascript", "prettier"]
-}
