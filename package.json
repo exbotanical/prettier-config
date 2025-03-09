@@ -1,6 +1,8 @@
 {
   "name": "@exbotanical/prettier-config",
+  "type": "module",
   "version": "1.0.0",
+  "private": false,
   "description": "Zito's prettier config",
   "author": "Matthew Zito <exbotanical@protonmail.com>",
   "license": "MIT",
@@ -30,7 +32,7 @@
     "prepack": "npm run build",
     "prepare": "simple-git-hooks",
     "typecheck": "tsc --noEmit",
-    "release": "npm publish"
+    "release": "bumpp && npm publish"
   },
   "peerDependencies": {
     "prettier": "^3.5.3",
@@ -61,6 +63,7 @@
   },
   "devDependencies": {
     "@exbotanical/eslint-config": "^1.0.1",
+    "bumpp": "^10.0.3",
     "jiti": "^2.4.2",
     "lint-staged": "^15.4.3",
     "simple-git-hooks": "^2.11.1",
