@@ -1,29 +1,17 @@
-# @magister_zito/prettier-config
+# @exbotanical/prettier-config
 
 Extensible prettier configurations for the punctilious developer.
 
 ## Usage
 
 ```bash
-pnpm add -D @magister_zito/prettier-config
+npm i -D prettier @exbotanical/prettier-config
 ```
 
-In package.json:
+```mjs
+import exbotanical from "@exbotanical/prettier-config";
 
-```json
-{
-  "prettier": "@magister_zito/prettier-config"
-}
-```
-
-In .prettierrc:
-
-```json
-"@magister_zito/prettier-config"
-```
-
-Extending .prettierignore:
-
-```bash
-prettier . --write --ignore-path node_modules/@magister_zito/prettier-config/.prettierignore
+export default exbotanical({
+  // ...options
+});
 ```
