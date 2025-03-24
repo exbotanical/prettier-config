@@ -9,9 +9,9 @@ npm i -D prettier @exbotanical/prettier-config
 ```
 
 ```mjs
-import exbotanical from "@exbotanical/prettier-config";
+import exbotanical from '@exbotanical/prettier-config'
 
 export default exbotanical({
   // ...options
-});
+})
 ```

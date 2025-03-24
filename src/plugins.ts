@@ -4,21 +4,21 @@ export interface OptionsPlugins {
    *
    * @default true
    */
-  xml?: boolean;
+  xml?: boolean
 
   /**
    * Enables shell formatting.
    *
    * @default true
    */
-  shell?: boolean;
+  shell?: boolean
 
   /**
    * Enables TOML formatting.
    *
    * @default true
    */
-  toml?: boolean;
+  toml?: boolean
 
   /**
    * Enables nginx formatting.
@@ -28,7 +28,7 @@ export interface OptionsPlugins {
    *
    * @default false
    */
-  nginx?: boolean;
+  nginx?: boolean
 
   /**
    * Enables .properties file formatting.
@@ -38,7 +38,7 @@ export interface OptionsPlugins {
    *
    * @default false
    */
-  properties?: boolean;
+  properties?: boolean
 
   /**
    * Enables SQL formatting.
@@ -48,7 +48,7 @@ export interface OptionsPlugins {
    *
    * @default false
    */
-  sql?: boolean;
+  sql?: boolean
 
   /**
    * Enables solidity formatting.
@@ -58,15 +58,15 @@ export interface OptionsPlugins {
    *
    * @default false
    */
-  solidity?: boolean;
+  solidity?: boolean
 }
 
 export const PLUGIN_MAPPINGS: Record<keyof OptionsPlugins, string> = {
-  xml: "@prettier/plugin-xml",
-  toml: "prettier-plugin-toml",
-  shell: "prettier-plugin-sh",
-  nginx: "prettier-plugin-nginx",
-  properties: "prettier-plugin-properties",
-  sql: "prettier-plugin-sql",
-  solidity: "prettier-plugin-solidity",
-};
+  xml: '@prettier/plugin-xml',
+  toml: 'prettier-plugin-toml',
+  shell: 'prettier-plugin-sh',
+  nginx: 'prettier-plugin-nginx',
+  properties: 'prettier-plugin-properties',
+  sql: 'prettier-plugin-sql',
+  solidity: 'prettier-plugin-solidity',
+}
