@@ -1,4 +1,4 @@
-import { PLUGIN_MAPPINGS, resolveAllPlugins } from './plugins'
+import { PLUGIN_MAPPINGS, PLUGIN_NAMES, resolveAllPlugins } from './plugins'
 
 import type { OptionsPlugins } from './plugins'
 import type { Options, Config } from 'prettier'
@@ -23,9 +23,9 @@ export default function exbotanical({
 }: OptionsPrettier = {}): Config {
   const enabledPlugins = pluginOpts === 'all' ? resolveAllPlugins() : pluginOpts
 
-  const plugins: string[] = Object.entries(PLUGIN_MAPPINGS)
-    .filter(([key]) => enabledPlugins[key as keyof OptionsPlugins])
-    .map(([_key, value]) => value)
+  const plugins: string[] = PLUGIN_NAMES.filter(name => enabledPlugins[name]).map(
+    name => PLUGIN_MAPPINGS[name],
+  )
 
   return {
     ...PRETTIER_OPTIONS,

@@ -93,6 +93,17 @@ export const PLUGIN_MAPPINGS: Record<keyof OptionsPlugins, string> = {
   ini: 'prettier-plugin-ini',
 }
 
+export const PLUGIN_NAMES: (keyof OptionsPlugins)[] = [
+  'xml',
+  'toml',
+  'shell',
+  'nginx',
+  'properties',
+  'sql',
+  'solidity',
+  'ini',
+]
+
 /**
  * Enables each plugin that is resolvable from the current working directory.
  */
