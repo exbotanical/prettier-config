@@ -20,7 +20,7 @@ export const PRETTIER_OPTIONS: Options = {
 
 export default function exbotanical({
   plugins: pluginOpts = {},
-}: OptionsPrettier): Config {
+}: OptionsPrettier = {}): Config {
   if (pluginOpts === 'all') {
     // eslint-disable-next-line no-param-reassign -- non-library or app, just a config
     pluginOpts = {
