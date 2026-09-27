@@ -86,7 +86,8 @@
     "prettier-plugin-toml": "^2.0.2",
     "simple-git-hooks": "^2.11.1",
     "tsup": "^8.4.0",
-    "typescript": "^5.8.2"
+    "typescript": "^5.8.2",
+    "vitest": "^3.0.7"
   },
   "simple-git-hooks": {
     "pre-commit": "npx lint-staged"
