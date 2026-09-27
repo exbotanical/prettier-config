@@ -35,14 +35,20 @@
     "release": "bumpp && npm publish"
   },
   "peerDependencies": {
+    "@prettier/plugin-xml": "^3.4.1",
     "prettier": "^3.5.3",
     "prettier-plugin-ini": "^1.3.0",
     "prettier-plugin-nginx": "^1.0.3",
     "prettier-plugin-properties": "^0.3.0",
+    "prettier-plugin-sh": "^0.15.0",
     "prettier-plugin-solidity": "^1.4.2",
-    "prettier-plugin-sql": "^0.18.1"
+    "prettier-plugin-sql": "^0.18.1",
+    "prettier-plugin-toml": "^2.0.2"
   },
   "peerDependenciesMeta": {
+    "@prettier/plugin-xml": {
+      "optional": true
+    },
     "prettier-plugin-ini": {
       "optional": true
     },
@@ -52,24 +58,28 @@
     "prettier-plugin-properties": {
       "optional": true
     },
+    "prettier-plugin-sh": {
+      "optional": true
+    },
     "prettier-plugin-solidity": {
       "optional": true
     },
     "prettier-plugin-sql": {
       "optional": true
+    },
+    "prettier-plugin-toml": {
+      "optional": true
     }
-  },
-  "dependencies": {
-    "@prettier/plugin-xml": "^3.4.1",
-    "prettier-plugin-sh": "^0.15.0",
-    "prettier-plugin-toml": "^2.0.2"
   },
   "devDependencies": {
     "@exbotanical/eslint-config": "^1.0.1",
+    "@prettier/plugin-xml": "^3.4.1",
     "bumpp": "^10.0.3",
     "jiti": "^2.4.2",
     "lint-staged": "^15.4.3",
     "prettier": "^3.5.3",
+    "prettier-plugin-sh": "^0.15.0",
+    "prettier-plugin-toml": "^2.0.2",
     "simple-git-hooks": "^2.11.1",
     "tsup": "^8.4.0",
     "typescript": "^5.8.2"

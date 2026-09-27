@@ -2,6 +2,9 @@ export interface OptionsPlugins {
   /**
    * Enables XML formatting.
    *
+   * Requires installing:
+   * - @prettier/plugin-xml
+   *
    * @default false
    */
   xml?: boolean
@@ -9,12 +12,18 @@ export interface OptionsPlugins {
   /**
    * Enables shell formatting.
    *
+   * Requires installing:
+   * - prettier-plugin-sh
+   *
    * @default false
    */
   shell?: boolean
 
   /**
    * Enables TOML formatting.
+   *
+   * Requires installing:
+   * - prettier-plugin-toml
    *
    * @default false
    */
