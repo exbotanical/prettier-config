@@ -1,4 +1,7 @@
-import { isPackageExists } from 'local-pkg'
+import process from 'node:process'
+import { fileURLToPath } from 'node:url'
+
+import { resolveModule } from 'local-pkg'
 
 export interface OptionsPlugins {
   /**
@@ -104,31 +107,52 @@ export const PLUGIN_NAMES: (keyof OptionsPlugins)[] = [
   'ini',
 ]
 
+const PACKAGE_DIR = fileURLToPath(new URL('.', import.meta.url))
+
 /**
- * Enables each plugin that is resolvable from the current working directory.
+ * Enables each plugin that is resolvable by resolvePluginPath.
  */
 export function resolveAllPlugins(): OptionsPlugins {
   return {
-    xml: isPackageExists(PLUGIN_MAPPINGS.xml),
-    toml: isPackageExists(PLUGIN_MAPPINGS.toml),
-    shell: isPackageExists(PLUGIN_MAPPINGS.shell),
-    nginx: isPackageExists(PLUGIN_MAPPINGS.nginx),
-    properties: isPackageExists(PLUGIN_MAPPINGS.properties),
-    sql: isPackageExists(PLUGIN_MAPPINGS.sql),
-    solidity: isPackageExists(PLUGIN_MAPPINGS.solidity),
-    ini: isPackageExists(PLUGIN_MAPPINGS.ini),
+    xml: isPluginInstalled(PLUGIN_MAPPINGS.xml),
+    toml: isPluginInstalled(PLUGIN_MAPPINGS.toml),
+    shell: isPluginInstalled(PLUGIN_MAPPINGS.shell),
+    nginx: isPluginInstalled(PLUGIN_MAPPINGS.nginx),
+    properties: isPluginInstalled(PLUGIN_MAPPINGS.properties),
+    sql: isPluginInstalled(PLUGIN_MAPPINGS.sql),
+    solidity: isPluginInstalled(PLUGIN_MAPPINGS.solidity),
+    ini: isPluginInstalled(PLUGIN_MAPPINGS.ini),
   }
 }
 
 /**
- * Throws when an enabled plugin is not resolvable from the current working directory, so
- * that the error names the package to install instead of prettier failing to load it later.
+ * Resolves each plugin package to the absolute path of its entry file. Prettier resolves bare
+ * plugin names from the directory it runs in; a file path makes it load the plugin directly,
+ * which prevents `Cannot find package` when the plugin is not reachable from there, as in a
+ * pnpm workspace package with hoisting disabled. With npm or default pnpm hoisting, the
+ * result is the same as using bare names. Throws when a plugin is not resolvable.
  */
-export function assertPluginsInstalled(packageNames: string[]): void {
-  const missing = packageNames.filter(name => !isPackageExists(name))
-  if (missing.length === 0) return
+export function resolvePluginPaths(packageNames: string[]): string[] {
+  const resolved = packageNames.map(name => ({ name, path: resolvePluginPath(name) }))
+  const missing = resolved.filter(({ path }) => !path).map(({ name }) => name)
 
-  throw new Error(
-    `@exbotanical/prettier-config: install the enabled prettier plugins: ${missing.join(', ')}`,
-  )
+  if (missing.length > 0) {
+    throw new Error(
+      `@exbotanical/prettier-config: install the enabled prettier plugins: ${missing.join(', ')}`,
+    )
+  }
+
+  return resolved.flatMap(({ path }) => (path ? [path] : []))
+}
+
+function isPluginInstalled(packageName: string): boolean {
+  return resolvePluginPath(packageName) !== undefined
+}
+
+/**
+ * Resolves a plugin from this package's directory first, where package managers link peer
+ * dependencies, and then from the current working directory.
+ */
+function resolvePluginPath(packageName: string): string | undefined {
+  return resolveModule(packageName, { paths: [PACKAGE_DIR, `${process.cwd()}/`] })
 }

@@ -1,8 +1,8 @@
 import {
-  assertPluginsInstalled,
   PLUGIN_MAPPINGS,
   PLUGIN_NAMES,
   resolveAllPlugins,
+  resolvePluginPaths,
 } from './plugins'
 
 import type { OptionsPlugins } from './plugins'
@@ -28,13 +28,12 @@ export default function exbotanical({
 }: OptionsPrettier = {}): Config {
   const enabledPlugins = pluginOpts === 'all' ? resolveAllPlugins() : pluginOpts
 
-  const plugins: string[] = PLUGIN_NAMES.filter(name => enabledPlugins[name]).map(
+  const packageNames = PLUGIN_NAMES.filter(name => enabledPlugins[name]).map(
     name => PLUGIN_MAPPINGS[name],
   )
-  assertPluginsInstalled(plugins)
 
   return {
     ...PRETTIER_OPTIONS,
-    plugins,
+    plugins: resolvePluginPaths(packageNames),
   }
 }
