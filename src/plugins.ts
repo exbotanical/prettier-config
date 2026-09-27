@@ -1,3 +1,5 @@
+import { isPackageExists } from 'local-pkg'
+
 export interface OptionsPlugins {
   /**
    * Enables XML formatting.
@@ -89,4 +91,20 @@ export const PLUGIN_MAPPINGS: Record<keyof OptionsPlugins, string> = {
   sql: 'prettier-plugin-sql',
   solidity: 'prettier-plugin-solidity',
   ini: 'prettier-plugin-ini',
+}
+
+/**
+ * Enables each plugin that is resolvable from the current working directory.
+ */
+export function resolveAllPlugins(): OptionsPlugins {
+  return {
+    xml: isPackageExists(PLUGIN_MAPPINGS.xml),
+    toml: isPackageExists(PLUGIN_MAPPINGS.toml),
+    shell: isPackageExists(PLUGIN_MAPPINGS.shell),
+    nginx: isPackageExists(PLUGIN_MAPPINGS.nginx),
+    properties: isPackageExists(PLUGIN_MAPPINGS.properties),
+    sql: isPackageExists(PLUGIN_MAPPINGS.sql),
+    solidity: isPackageExists(PLUGIN_MAPPINGS.solidity),
+    ini: isPackageExists(PLUGIN_MAPPINGS.ini),
+  }
 }
