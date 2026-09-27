@@ -59,6 +59,16 @@ export interface OptionsPlugins {
    * @default false
    */
   solidity?: boolean
+
+  /**
+   * Enables INI formatting, including .gitconfig and .editorconfig files.
+   *
+   * Requires installing:
+   * - prettier-plugin-ini
+   *
+   * @default false
+   */
+  ini?: boolean
 }
 
 export const PLUGIN_MAPPINGS: Record<keyof OptionsPlugins, string> = {
@@ -69,4 +79,5 @@ export const PLUGIN_MAPPINGS: Record<keyof OptionsPlugins, string> = {
   properties: 'prettier-plugin-properties',
   sql: 'prettier-plugin-sql',
   solidity: 'prettier-plugin-solidity',
+  ini: 'prettier-plugin-ini',
 }
