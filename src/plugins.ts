@@ -2,21 +2,21 @@ export interface OptionsPlugins {
   /**
    * Enables XML formatting.
    *
-   * @default true
+   * @default false
    */
   xml?: boolean
 
   /**
    * Enables shell formatting.
    *
-   * @default true
+   * @default false
    */
   shell?: boolean
 
   /**
    * Enables TOML formatting.
    *
-   * @default true
+   * @default false
    */
   toml?: boolean
 
