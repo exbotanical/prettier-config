@@ -119,3 +119,16 @@ export function resolveAllPlugins(): OptionsPlugins {
     ini: isPackageExists(PLUGIN_MAPPINGS.ini),
   }
 }
+
+/**
+ * Throws when an enabled plugin is not resolvable from the current working directory, so
+ * that the error names the package to install instead of prettier failing to load it later.
+ */
+export function assertPluginsInstalled(packageNames: string[]): void {
+  const missing = packageNames.filter(name => !isPackageExists(name))
+  if (missing.length === 0) return
+
+  throw new Error(
+    `@exbotanical/prettier-config: install the enabled prettier plugins: ${missing.join(', ')}`,
+  )
+}
