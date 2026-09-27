@@ -77,6 +77,7 @@
   "devDependencies": {
     "@exbotanical/eslint-config": "^1.0.1",
     "@prettier/plugin-xml": "^3.4.1",
+    "@types/node": "^22.13.8",
     "bumpp": "^10.0.3",
     "jiti": "^2.4.2",
     "lint-staged": "^15.4.3",
