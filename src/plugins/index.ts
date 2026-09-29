@@ -1,3 +1,4 @@
+import { docker } from './docker'
 import { ini } from './ini'
 import { nginx } from './nginx'
 import { properties } from './properties'
@@ -17,6 +18,7 @@ import type { ConfiguredPlugin } from '../plugin-definition'
 export const PLUGINS: ConfiguredPlugin[] = [
   xml,
   shell,
+  docker,
   toml,
   ini,
   properties,

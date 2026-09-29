@@ -35,3 +35,20 @@ export async function loadPlugin(packageName: string): Promise<Plugin> {
   const loaded: Plugin & { default?: Plugin } = await import(pathToFileURL(path).href)
   return loaded.default ?? loaded
 }
+
+/**
+ * Imports `packageName` as resolved from the directory of `fromPath` and returns the
+ * module. Node's module resolution starts in the directory of `fromPath`, so this loads a
+ * package that is a dependency of the package containing `fromPath`, even when neither this
+ * package nor the consumer depends on it directly. Throws when `packageName` cannot be
+ * resolved from that directory.
+ */
+export async function importFrom<T>(packageName: string, fromPath: string): Promise<T> {
+  const path = resolveModule(packageName, { paths: [fromPath] })
+  if (!path) {
+    throw new Error(`@exbotanical/prettier-config: cannot resolve ${packageName}`)
+  }
+
+  const loaded: T = await import(pathToFileURL(path).href)
+  return loaded
+}

@@ -1,3 +1,4 @@
+import type { OptionsDocker } from './plugins/docker'
 import type { OptionsIni } from './plugins/ini'
 import type { OptionsNginx } from './plugins/nginx'
 import type { OptionsProperties } from './plugins/properties'
@@ -28,6 +29,13 @@ export interface OptionsPrettier {
    * @default false
    */
   shell?: boolean | OptionsShell
+
+  /**
+   * Formats Dockerfiles with @reteps/dockerfmt (the formatter is bundled with
+   * prettier-plugin-sh, which therefore must be installed).
+   * @default false
+   */
+  docker?: boolean | OptionsDocker
 
   /**
    * Formats TOML with prettier-plugin-toml.

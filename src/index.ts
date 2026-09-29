@@ -2,6 +2,7 @@ export { PRETTIER_OPTIONS } from './core'
 export { exbotanical as default } from './factory'
 
 export type { OptionsPrettier } from './options'
+export type { OptionsDocker } from './plugins/docker'
 export type { OptionsIni } from './plugins/ini'
 export type { OptionsNginx } from './plugins/nginx'
 export type { OptionsProperties } from './plugins/properties'
