@@ -1,14 +1,12 @@
-import * as prettier from 'prettier'
 import { describe, expect, it } from 'vitest'
 
-import exbotanical from '../src'
+import { spaceFunctionNames } from '../src/plugins/shell/function-space'
+
+import { format } from './utils'
 
 import type { OptionsPrettier } from '../src'
 
-const SPACED: OptionsPrettier = { shell: true }
-const UNSPACED: OptionsPrettier = { shell: { functionSpace: false } }
-
-describe('shell function spacing', () => {
+describe('spaceFunctionNames', () => {
   it.each<{ name: string; input: string; expected: string }>([
     { name: 'a plain name', input: 'foo() {\n  :\n}\n', expected: 'foo () {\n  :\n}\n' },
     {
@@ -61,8 +59,8 @@ describe('shell function spacing', () => {
       input: 'cat << EOF\nh() {\nEOF\n',
       expected: 'cat << EOF\nh() {\nEOF\n',
     },
-  ])('formats $name', async ({ input, expected }) => {
-    await expect(format(input, SPACED)).resolves.toBe(expected)
+  ])('spaces $name', async ({ input, expected }) => {
+    await expect(spaceFunctionNames(input)).resolves.toBe(expected)
   })
 
   it.each([
@@ -71,24 +69,25 @@ describe('shell function spacing', () => {
     'function bar() { :; }\nfunction baz { :; }\n',
     'outer() {\n  inner() { :; }\n}\n',
   ])('is idempotent on a second pass over %j', async input => {
-    const once = await format(input, SPACED)
+    const once = await spaceFunctionNames(input)
 
-    await expect(format(once, SPACED)).resolves.toBe(once)
-  })
-
-  it.each<{ name: string; options: OptionsPrettier; expected: string }>([
-    { name: 'spacing by default', options: SPACED, expected: 'foo () {\n  :\n}\n' },
-    {
-      name: 'shfmt output with functionSpace false',
-      options: UNSPACED,
-      expected: 'foo() {\n  :\n}\n',
-    },
-  ])('prints $name', async ({ options, expected }) => {
-    await expect(format('foo() {\n  :\n}\n', options)).resolves.toBe(expected)
+    await expect(spaceFunctionNames(once)).resolves.toBe(once)
   })
 })
 
-async function format(input: string, options: OptionsPrettier): Promise<string> {
-  const config = await exbotanical(options)
-  return prettier.format(input, { ...config, filepath: 'sample.bash' })
-}
+describe('shell functionSpace', () => {
+  it.each<{ name: string; options: OptionsPrettier; expected: string }>([
+    {
+      name: 'spaces names by default',
+      options: { shell: true },
+      expected: 'foo () {\n  :\n}\n',
+    },
+    {
+      name: 'keeps the shfmt output with functionSpace false',
+      options: { shell: { functionSpace: false } },
+      expected: 'foo() {\n  :\n}\n',
+    },
+  ])('$name', async ({ options, expected }) => {
+    await expect(format('foo() {\n  :\n}\n', 'a.bash', options)).resolves.toBe(expected)
+  })
+})

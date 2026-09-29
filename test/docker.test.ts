@@ -1,7 +1,6 @@
-import * as prettier from 'prettier'
 import { describe, expect, it } from 'vitest'
 
-import exbotanical from '../src'
+import { claims, format, languagesFor } from './utils'
 
 import type { OptionsPrettier } from '../src'
 
@@ -34,68 +33,46 @@ describe('docker', () => {
       claimed: ['app.docker'],
       unclaimed: ['Dockerfile', 'Dockerfile.dev'],
     },
-    {
-      name: 'docker disabled',
-      options: { shell: true },
-      claimed: [],
-      unclaimed: ['Dockerfile'],
-    },
   ])('claims files by $name', async ({ options, claimed, unclaimed }) => {
-    const { plugins } = await exbotanical(options)
-    const parserOf = async (name: string) => {
-      const info = await prettier.getFileInfo(name, { plugins })
-      return info.inferredParser
-    }
+    const [language] = await languagesFor(options, 'dockerfile')
+    if (!language) throw new Error('the Dockerfile language was expected but was missing')
 
-    await expect(Promise.all(claimed.map(async name => parserOf(name)))).resolves.toEqual(
-      claimed.map(() => 'dockerfile'),
-    )
-    await expect(
-      Promise.all(unclaimed.map(async name => parserOf(name))),
-    ).resolves.toEqual(unclaimed.map(() => null))
+    expect({
+      claimed: claimed.filter(name => claims(language, name)),
+      unclaimed: unclaimed.filter(name => !claims(language, name)),
+    }).toEqual({ claimed, unclaimed })
   })
 
-  it.each<{ name: string; options: OptionsPrettier; file: string; expected: string }>([
+  it('registers no Dockerfile language when docker is disabled', async () => {
+    await expect(languagesFor({ shell: true }, 'dockerfile')).rejects.toThrow(Error)
+  })
+
+  it.each<{ name: string; options: OptionsPrettier; expected: string }>([
     {
-      name: 'the defaults',
+      name: 'the indent from tabWidth',
       options: { docker: true },
-      file: 'Dockerfile',
       expected:
         'FROM alpine:3\nRUN apk add curl \\\n  && rm -rf /var/cache/apk/* >/dev/null\nCOPY . /app\n',
     },
     {
-      name: 'a Dockerfile.* name',
-      options: { docker: true },
-      file: 'Dockerfile.dev',
-      expected:
-        'FROM alpine:3\nRUN apk add curl \\\n  && rm -rf /var/cache/apk/* >/dev/null\nCOPY . /app\n',
-    },
-    {
-      name: 'indent',
+      name: 'the indent option',
       options: { docker: { indent: 4 } },
-      file: 'Dockerfile',
       expected:
         'FROM alpine:3\nRUN apk add curl \\\n    && rm -rf /var/cache/apk/* >/dev/null\nCOPY . /app\n',
     },
     {
-      name: 'spaceRedirects',
+      name: 'the spaceRedirects option',
       options: { docker: { spaceRedirects: true } },
-      file: 'Dockerfile',
       expected:
         'FROM alpine:3\nRUN apk add curl \\\n  && rm -rf /var/cache/apk/* > /dev/null\nCOPY . /app\n',
     },
     {
-      name: 'the shell plugin also enabled with its own indent',
+      name: 'the tabWidth indent when the shell plugin sets its own indent',
       options: { docker: true, shell: { indent: 8 } },
-      file: 'Dockerfile',
       expected:
         'FROM alpine:3\nRUN apk add curl \\\n  && rm -rf /var/cache/apk/* >/dev/null\nCOPY . /app\n',
     },
-  ])('formats with $name', async ({ options, file, expected }) => {
-    const config = await exbotanical(options)
-
-    await expect(
-      prettier.format(DOCKERFILE, { ...config, filepath: file }),
-    ).resolves.toBe(expected)
+  ])('passes $name to dockerfmt', async ({ options, expected }) => {
+    await expect(format(DOCKERFILE, 'Dockerfile', options)).resolves.toBe(expected)
   })
 })

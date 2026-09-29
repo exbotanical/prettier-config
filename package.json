@@ -28,7 +28,6 @@
     "docs:check": "npm run docs && git ls-files --error-unmatch docs/options.md && git diff --exit-code -- docs/options.md",
     "lint": "eslint .",
     "lint:fix": "npm run lint -- --fix",
-    "pretest": "npm run build",
     "test": "vitest --run",
     "test:dev": "vitest",
     "prepack": "npm run build",
