@@ -13,6 +13,19 @@ export const SHELL_VARIANTS: Record<ShellVariant, number> = {
 /** Options for prettier-plugin-sh. */
 export interface OptionsShell {
   /**
+   * Glob patterns for the files formatted as shell. Setting this replaces the defaults.
+   * @default ['**\/*.sh', '**\/*.bash', '**\/*.zsh', '**\/.bashrc', '**\/bashrc', '**\/.bash_profile', '**\/bash_profile', '**\/.bash_logout', '**\/bash_logout', '**\/.bash_aliases', '**\/bash_aliases', '**\/.bash_functions', '**\/bash_functions', '**\/.profile', '**\/profile', '**\/.xinitrc', '**\/xinitrc', '**\/.xsession', '**\/xsession']
+   */
+  files?: string[]
+
+  /**
+   * The shebang interpreters that mark a file as shell, such as `bash` in
+   * `#!/usr/bin/env bash`. Setting this replaces the defaults.
+   * @default ['sh', 'bash']
+   */
+  interpreters?: string[]
+
+  /**
    * The shell dialect the parser accepts. Files ending in `.zsh`, and files with a zsh
    * shebang, always use `zsh`.
    * @default 'bash'
@@ -84,12 +97,15 @@ export interface OptionsShell {
 
 /**
  * Converts the factory's shell options into the Prettier options prettier-plugin-sh reads:
- * the dialect name becomes its numeric value, and `recoverErrors` becomes the string the
- * plugin requires.
+ * the dialect name becomes its numeric value, `recoverErrors` becomes the string the
+ * plugin requires, and the file matching options, which configure the language, are left
+ * out.
  */
 export function toShellPrettierOptions({
   variant = 'bash',
   recoverErrors,
+  files: _files,
+  interpreters: _interpreters,
   ...rest
 }: OptionsShell): Record<string, unknown> {
   return {
