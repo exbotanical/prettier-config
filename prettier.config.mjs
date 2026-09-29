@@ -1,5 +1,8 @@
-import exbotanical from './dist/index.js'
+import { createJiti } from 'jiti'
 
-export default exbotanical({
-  plugins: 'all',
-})
+// Loads the TypeScript sources, so the repo formats itself with its current code and
+// needs no build first.
+const jiti = createJiti(import.meta.url)
+const { default: exbotanical } = await jiti.import('./src/index.ts')
+
+export default await exbotanical()

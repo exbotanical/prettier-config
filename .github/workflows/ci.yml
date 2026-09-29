@@ -29,6 +29,9 @@ jobs:
       - name: Lint
         run: npm run lint
 
+      - name: Format
+        run: npm run fmt:check
+
       - name: Typecheck
         run: npm run typecheck
 
