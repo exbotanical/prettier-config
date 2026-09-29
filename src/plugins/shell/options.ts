@@ -26,6 +26,14 @@ export interface OptionsShell {
   interpreters?: string[]
 
   /**
+   * Ensures a space exists between function names and the following open parens e.g. `name () {` instead of
+   * `name() {`. With `shopt -s extglob`, bash parses `name?()` as an extended glob, so
+   * functions whose names end in `?`, `*`, `+`, `@`, or `!` need the space.
+   * @default true
+   */
+  functionSpace?: boolean
+
+  /**
    * The shell dialect the parser accepts. Files ending in `.zsh`, and files with a zsh
    * shebang, always use `zsh`.
    * @default 'bash'
@@ -98,12 +106,13 @@ export interface OptionsShell {
 /**
  * Converts the factory's shell options into the Prettier options prettier-plugin-sh reads:
  * the dialect name becomes its numeric value, `recoverErrors` becomes the string the
- * plugin requires, and the file matching options, which configure the language, are left
- * out.
+ * plugin requires, and `functionSpace` becomes this package's `shellFunctionSpace`
+ * option. The file matching options configure the language and are intentionally omitted.
  */
 export function toShellPrettierOptions({
   variant = 'bash',
   recoverErrors,
+  functionSpace = true,
   files: _files,
   interpreters: _interpreters,
   ...rest
@@ -111,6 +120,7 @@ export function toShellPrettierOptions({
   return {
     ...rest,
     variant: SHELL_VARIANTS[variant],
+    shellFunctionSpace: functionSpace,
     ...(recoverErrors === undefined ? {} : { recoverErrors: String(recoverErrors) }),
   }
 }

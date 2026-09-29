@@ -73,7 +73,8 @@
   },
   "dependencies": {
     "local-pkg": "^1.1.1",
-    "picomatch": "^4.0.7"
+    "picomatch": "^4.0.7",
+    "web-tree-sitter": "^0.27.0"
   },
   "devDependencies": {
     "@exbotanical/eslint-config": "^1.0.1",
@@ -92,6 +93,7 @@
     "prettier-plugin-sql": "^0.20.0",
     "prettier-plugin-toml": "^3.0.2",
     "simple-git-hooks": "^2.11.1",
+    "tree-sitter-bash": "^0.25.1",
     "tsup": "^8.4.0",
     "typescript": "^5.8.2",
     "vitest": "^3.0.7"
