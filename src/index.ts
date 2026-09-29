@@ -1,39 +1,12 @@
-import {
-  PLUGIN_MAPPINGS,
-  PLUGIN_NAMES,
-  resolveAllPlugins,
-  resolvePluginPaths,
-} from './plugins'
+export { PRETTIER_OPTIONS } from './core'
+export { exbotanical as default } from './factory'
 
-import type { OptionsPlugins } from './plugins'
-import type { Options, Config } from 'prettier'
-
-export interface OptionsPrettier {
-  plugins?: OptionsPlugins | 'all'
-}
-
-export const PRETTIER_OPTIONS: Options = {
-  useTabs: false,
-  singleQuote: true,
-  quoteProps: 'consistent',
-  trailingComma: 'all',
-  arrowParens: 'avoid',
-  semi: false,
-  printWidth: 90,
-  bracketSpacing: true,
-}
-
-export default function exbotanical({
-  plugins: pluginOpts = {},
-}: OptionsPrettier = {}): Config {
-  const enabledPlugins = pluginOpts === 'all' ? resolveAllPlugins() : pluginOpts
-
-  const packageNames = PLUGIN_NAMES.filter(name => enabledPlugins[name]).map(
-    name => PLUGIN_MAPPINGS[name],
-  )
-
-  return {
-    ...PRETTIER_OPTIONS,
-    plugins: resolvePluginPaths(packageNames),
-  }
-}
+export type { OptionsPrettier } from './options'
+export type { OptionsIni } from './plugins/ini'
+export type { OptionsNginx } from './plugins/nginx'
+export type { OptionsProperties } from './plugins/properties'
+export type { OptionsShell, ShellVariant } from './plugins/shell/options'
+export type { OptionsSolidity } from './plugins/solidity'
+export type { OptionsSql } from './plugins/sql'
+export type { OptionsToml } from './plugins/toml'
+export type { OptionsXml } from './plugins/xml'

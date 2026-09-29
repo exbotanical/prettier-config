@@ -1,125 +1,169 @@
-import fs from 'node:fs/promises'
-import os from 'node:os'
-import path from 'node:path'
-import process from 'node:process'
+import * as prettier from 'prettier'
+import { describe, expect, it } from 'vitest'
 
-import { afterAll, afterEach, beforeAll, describe, expect, it } from 'vitest'
-
-import exbotanical, { PRETTIER_OPTIONS } from '../src'
-import { PLUGIN_MAPPINGS, PLUGIN_NAMES } from '../src/plugins'
+import exbotanical from '../src'
+import { loadPlugin } from '../src/resolve'
 
 import type { OptionsPrettier } from '../src'
 
-const REPO_DIR = process.cwd()
-const INSTALLED_BY_REPO = [
-  '@prettier/plugin-xml',
-  'prettier-plugin-toml',
-  'prettier-plugin-sh',
-]
-
-let dirWithIniPlugin = ''
-
-beforeAll(async () => {
-  dirWithIniPlugin = await fs.mkdtemp(path.join(os.tmpdir(), 'prettier-config-'))
-  const packageDir = path.join(dirWithIniPlugin, 'node_modules', 'prettier-plugin-ini')
-  await fs.mkdir(packageDir, { recursive: true })
-  await fs.writeFile(
-    path.join(packageDir, 'package.json'),
-    JSON.stringify({ name: 'prettier-plugin-ini', main: 'index.js' }),
-  )
-  await fs.writeFile(path.join(packageDir, 'index.js'), 'module.exports = {}\n')
-})
-
-afterEach(() => {
-  process.chdir(REPO_DIR)
-})
-
-afterAll(async () => {
-  await fs.rm(dirWithIniPlugin, { recursive: true, force: true })
-})
-
 describe('exbotanical', () => {
-  it.each<{ name: string; options: OptionsPrettier | undefined; expected: string[] }>([
-    { name: 'no argument', options: undefined, expected: [] },
-    { name: 'empty options', options: {}, expected: [] },
-    { name: 'empty plugins', options: { plugins: {} }, expected: [] },
+  it.each<{
+    name: string
+    options: OptionsPrettier
+    file: string
+    input: string
+    expected: string
+  }>([
     {
-      name: 'one explicit enable',
-      options: { plugins: { shell: true } },
-      expected: ['prettier-plugin-sh'],
+      name: 'xml',
+      options: { xml: true },
+      file: 'a.xml',
+      input: '<a><b/></a>\n',
+      expected: '<a><b /></a>\n',
     },
     {
-      name: 'several explicit enables',
-      options: { plugins: { xml: true, toml: true, shell: true } },
-      expected: INSTALLED_BY_REPO,
+      name: 'shell',
+      options: { shell: true },
+      file: 'a.sh',
+      input: 'if true;then echo  hi;fi\n',
+      expected: 'if true; then echo hi; fi\n',
     },
     {
-      name: 'explicit enables mixed with disables',
-      options: { plugins: { shell: true, toml: false } },
-      expected: ['prettier-plugin-sh'],
+      name: 'toml, with indentTableKeyValuePairs on by default',
+      options: { toml: true },
+      file: 'a.toml',
+      input: '[server]\nhost="x"\n',
+      expected: "[server]\n  host = 'x'\n",
     },
     {
-      name: 'explicit disable only',
-      options: { plugins: { shell: false } },
-      expected: [],
+      name: 'ini',
+      options: { ini: true },
+      file: 'a.ini',
+      input: '[s]\na  =  1\n',
+      expected: '[s]\na=1\n',
     },
-  ])('resolves plugins for $name', ({ options, expected }) => {
-    const config = exbotanical(options)
-
-    expect(config).toMatchObject(PRETTIER_OPTIONS)
-    expect(config.plugins).toEqual(expected.map(name => pluginPath(name)))
+    {
+      name: 'properties',
+      options: { properties: true },
+      file: 'a.properties',
+      input: 'a=1\n',
+      expected: 'a = 1\n',
+    },
+    {
+      name: 'nginx',
+      options: { nginx: true },
+      file: 'a.nginx',
+      input: 'server{listen 80;}\n',
+      expected: 'server {\n    listen 80;\n}\n',
+    },
+    {
+      name: 'sql',
+      options: { sql: true },
+      file: 'a.sql',
+      input: 'select a from t\n',
+      expected: 'select\n  a\nfrom\n  t\n',
+    },
+    {
+      name: 'solidity',
+      options: { solidity: true },
+      file: 'a.sol',
+      input: 'contract A{uint x=1;}\n',
+      expected: 'contract A {\n    uint x = 1;\n}\n',
+    },
+  ])('formats with $name enabled', async ({ options, file, input, expected }) => {
+    await expect(format(input, file, options)).resolves.toBe(expected)
   })
 
-  it.each<{ name: string; cwd: () => string; included: string[]; excluded: string[] }>([
+  it.each<{
+    name: string
+    options: OptionsPrettier
+    file: string
+    input: string
+    expected: string
+  }>([
     {
-      name: 'without the ini plugin installed',
-      cwd: () => REPO_DIR,
-      included: INSTALLED_BY_REPO,
-      excluded: ['prettier-plugin-ini'],
+      name: 'an xml option',
+      options: { xml: { xmlSelfClosingSpace: false } },
+      file: 'a.xml',
+      input: '<a><b /></a>\n',
+      expected: '<a><b/></a>\n',
     },
     {
-      name: 'with the ini plugin installed',
-      cwd: () => dirWithIniPlugin,
-      included: ['prettier-plugin-ini'],
-      excluded: [],
+      name: 'a toml default turned off',
+      options: { toml: { indentTableKeyValuePairs: false } },
+      file: 'a.toml',
+      input: '[server]\nhost="x"\n',
+      expected: "[server]\nhost = 'x'\n",
     },
-  ])("'all' enables every resolvable plugin $name", ({ cwd, included, excluded }) => {
-    process.chdir(cwd())
-
-    const { plugins = [] } = exbotanical({ plugins: 'all' })
-
-    expect(plugins).toEqual(
-      expect.arrayContaining(included.map(name => pluginPath(name))),
-    )
-    expect(
-      excluded.filter(name => plugins.some(plugin => isPluginPath(plugin, name))),
-    ).toEqual([])
+    {
+      name: 'a shell option',
+      options: { shell: { binaryNextLine: false } },
+      file: 'a.sh',
+      input: 'build && \\\n  deploy\n',
+      expected: 'build &&\n  deploy\n',
+    },
+    {
+      name: 'the shell variant name',
+      options: { shell: { variant: 'bats' } },
+      file: 'a.sh',
+      input: '@test "x" {\n  run  true\n}\n',
+      expected: '@test "x" {\n  run true\n}\n',
+    },
+    {
+      name: 'recoverErrors given as a number',
+      options: { shell: { recoverErrors: 1 } },
+      file: 'a.sh',
+      input: 'echo   ok |\n',
+      expected: 'echo ok |\n',
+    },
+    {
+      name: 'a core option',
+      options: { core: { semi: true } },
+      file: 'a.js',
+      input: 'const a = 1\n',
+      expected: 'const a = 1;\n',
+    },
+    {
+      name: 'the core defaults',
+      options: {},
+      file: 'a.js',
+      input: 'const a = { "b": 1, "c-d": 2 };\n',
+      expected: "const a = { 'b': 1, 'c-d': 2 }\n",
+    },
+  ])('applies $name', async ({ options, file, input, expected }) => {
+    await expect(format(input, file, options)).resolves.toBe(expected)
   })
 
-  it('throws when an explicitly enabled plugin is not installed', () => {
-    expect(() => exbotanical({ plugins: { ini: true } })).toThrow(Error)
+  it.each<{
+    name: string
+    options: OptionsPrettier
+    file: string
+    expected: string | null
+  }>([
+    { name: 'no plugin enabled', options: {}, file: 'a.toml', expected: null },
+    { name: 'toml disabled', options: { toml: false }, file: 'a.toml', expected: null },
+    {
+      name: 'properties with ini also enabled',
+      options: { ini: true, properties: true },
+      file: 'a.properties',
+      expected: 'dot-properties',
+    },
+  ])('infers the parser with $name', async ({ options, file, expected }) => {
+    const { plugins } = await exbotanical(options)
+    const { inferredParser } = await prettier.getFileInfo(file, { plugins })
+
+    expect(inferredParser).toBe(expected)
   })
 
-  it('lists every mapped plugin in PLUGIN_NAMES', () => {
-    expect([...PLUGIN_NAMES].sort()).toEqual(Object.keys(PLUGIN_MAPPINGS).sort())
+  it('throws when a plugin package is not installed', async () => {
+    await expect(loadPlugin('prettier-plugin-not-installed')).rejects.toThrow(Error)
   })
 })
 
-function pluginPath(packageName: string): string {
-  return expect.stringMatching(pluginPathPattern(packageName))
-}
-
-function isPluginPath(plugin: unknown, packageName: string): boolean {
-  return typeof plugin === 'string' && pluginPathPattern(packageName).test(plugin)
-}
-
-/**
- * Matches a plugin entry given either as the bare package name or as a resolved path
- * inside that package's node_modules directory, on posix or win32.
- */
-function pluginPathPattern(packageName: string): RegExp {
-  const pathSegment = packageName.replace('/', String.raw`[\\/]`)
-  return new RegExp(
-    String.raw`^(?:${packageName}|.*[\\/]node_modules[\\/]${pathSegment}[\\/].*)$`,
-  )
+async function format(
+  input: string,
+  filepath: string,
+  options: OptionsPrettier,
+): Promise<string> {
+  return prettier.format(input, { ...(await exbotanical(options)), filepath })
 }
