@@ -13,7 +13,7 @@ export interface OptionsProperties {
    * The separator printed between each key and its value.
    * @default ' = '
    */
-  keySeparator?: ' ' | ':' | '=' | ': ' | '= ' | ' : ' | ' = '
+  keySeparator?: ' ' | ':' | ': ' | ' : ' | '=' | '= ' | ' = '
 }
 
 export const properties = definePlugin({

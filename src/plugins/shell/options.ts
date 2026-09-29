@@ -1,5 +1,5 @@
 /** The shell dialects that prettier-plugin-sh parses. */
-export type ShellVariant = 'bash' | 'posix' | 'mksh' | 'bats' | 'zsh'
+export type ShellVariant = 'bash' | 'bats' | 'mksh' | 'posix' | 'zsh'
 
 /** The numeric `variant` values prettier-plugin-sh expects, from sh-syntax's LangVariant. */
 export const SHELL_VARIANTS: Record<ShellVariant, number> = {

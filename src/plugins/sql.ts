@@ -1,7 +1,7 @@
 import { definePlugin, passThrough } from '../plugin-definition'
 
 /** The case a sql option converts names to. */
-export type SqlLetterCase = 'preserve' | 'upper' | 'lower'
+export type SqlLetterCase = 'lower' | 'preserve' | 'upper'
 
 /** Options for prettier-plugin-sql. */
 export interface OptionsSql {
@@ -9,15 +9,15 @@ export interface OptionsSql {
    * The formatting engine.
    * @default 'sql-formatter'
    */
-  formatter?: 'sql-formatter' | 'node-sql-parser' | 'sql-cst'
+  formatter?: 'node-sql-parser' | 'sql-cst' | 'sql-formatter'
 
   /**
    * The SQL dialect that `sql-formatter` parses.
    * @default 'sql'
    */
   language?:
-    | 'sql'
     | 'bigquery'
+    | 'clickhouse'
     | 'db2'
     | 'db2i'
     | 'hive'
@@ -30,11 +30,11 @@ export interface OptionsSql {
     | 'singlestoredb'
     | 'snowflake'
     | 'spark'
+    | 'sql'
     | 'sqlite'
     | 'transactsql'
-    | 'tsql'
     | 'trino'
-    | 'clickhouse'
+    | 'tsql'
 
   /** The `sql-formatter` dialect selected through its `formatDialect()` API. */
   dialect?: string
@@ -73,7 +73,7 @@ export interface OptionsSql {
    * Whether `AND` and `OR` start or end each wrapped condition line.
    * @default 'before'
    */
-  logicalOperatorNewline?: 'before' | 'after'
+  logicalOperatorNewline?: 'after' | 'before'
 
   /**
    * The maximum length of a parenthesized expression kept on one line.
@@ -109,7 +109,7 @@ export interface OptionsSql {
    * The authority-list check that `node-sql-parser` runs.
    * @default 'table'
    */
-  type?: 'table' | 'column'
+  type?: 'column' | 'table'
 
   /**
    * The SQL dialect that `node-sql-parser` parses.
@@ -118,13 +118,13 @@ export interface OptionsSql {
   database?:
     | 'bigquery'
     | 'db2'
+    | 'flinksql'
     | 'hive'
     | 'mariadb'
     | 'mysql'
     | 'postgresql'
-    | 'transactsql'
-    | 'flinksql'
     | 'snowflake'
+    | 'transactsql'
 }
 
 export const sql = definePlugin({

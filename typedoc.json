@@ -9,7 +9,7 @@
   "disableSources": true,
   "hidePageHeader": true,
   "hideBreadcrumbs": true,
-  "interfacePropertiesFormat": "table",
+  "interfacePropertiesFormat": "htmlTable",
   "excludePrivate": true,
   "treatWarningsAsErrors": true
 }

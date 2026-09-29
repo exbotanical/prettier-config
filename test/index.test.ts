@@ -138,7 +138,7 @@ describe('exbotanical', () => {
     name: string
     options: OptionsPrettier
     file: string
-    expected: string | null
+    expected: null | string
   }>([
     { name: 'no plugin enabled', options: {}, file: 'a.toml', expected: null },
     { name: 'toml disabled', options: { toml: false }, file: 'a.toml', expected: null },

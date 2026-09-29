@@ -13,7 +13,7 @@ export interface OptionsXml {
    * re-indents whitespace-only text between elements, and `ignore` also reflows text.
    * @default 'strict'
    */
-  xmlWhitespaceSensitivity?: 'strict' | 'preserve' | 'ignore'
+  xmlWhitespaceSensitivity?: 'ignore' | 'preserve' | 'strict'
 
   /**
    * Sorts attributes alphabetically, with `xmlns` attributes first.
@@ -25,7 +25,7 @@ export interface OptionsXml {
    * The quote character around attribute values. `double` escapes embedded double quotes.
    * @default 'preserve'
    */
-  xmlQuoteAttributes?: 'preserve' | 'single' | 'double'
+  xmlQuoteAttributes?: 'double' | 'preserve' | 'single'
 }
 
 export const xml = definePlugin({

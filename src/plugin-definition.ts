@@ -36,7 +36,7 @@ export interface PluginDefinition<K extends PluginKey> {
 /** A plugin definition bound to its option key, as the factory consumes it. */
 export interface ConfiguredPlugin {
   key: PluginKey
-  resolve: (options: OptionsPrettier) => Promise<PluginFragment | null>
+  resolve: (options: OptionsPrettier) => Promise<null | PluginFragment>
 }
 
 /**

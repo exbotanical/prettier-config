@@ -31,7 +31,7 @@ export interface OptionsToml {
    * The character between the date and the time in date-time values.
    * @default 'T'
    */
-  dateTimeDelimiter?: 'T' | 'space' | 'preserve'
+  dateTimeDelimiter?: 'preserve' | 'space' | 'T'
 
   /**
    * The maximum number of blank lines kept between groups of entries. Must be at least 1.
@@ -78,13 +78,13 @@ export interface OptionsToml {
   /**
    * The quote character for quoted keys. Defaults to `stringQuoteStyle`.
    */
-  keyQuoteStyle?: 'double' | 'single' | 'preserve'
+  keyQuoteStyle?: 'double' | 'preserve' | 'single'
 
   /**
    * The quote character for strings. Strings that contain escapes keep double quotes, so
    * the value does not change. Defaults to `single` or `double` from `singleQuote`.
    */
-  stringQuoteStyle?: 'double' | 'single' | 'preserve'
+  stringQuoteStyle?: 'double' | 'preserve' | 'single'
 
   /**
    * Aligns the trailing comments of consecutive entries in one column.
