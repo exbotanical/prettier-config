@@ -24,6 +24,8 @@
   },
   "scripts": {
     "build": "tsup --clean --dts",
+    "docs": "typedoc && prettier --write docs/options.md",
+    "docs:check": "npm run docs && git ls-files --error-unmatch docs/options.md && git diff --exit-code -- docs/options.md",
     "lint": "eslint .",
     "lint:fix": "npm run lint -- --fix",
     "pretest": "npm run build",
@@ -95,6 +97,8 @@
     "simple-git-hooks": "^2.11.1",
     "tree-sitter-bash": "^0.25.1",
     "tsup": "^8.4.0",
+    "typedoc": "^0.28.20",
+    "typedoc-plugin-markdown": "^4.13.1",
     "typescript": "^5.8.2",
     "vitest": "^3.0.7"
   },

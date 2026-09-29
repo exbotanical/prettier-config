@@ -1,0 +1,15 @@
+{
+  "$schema": "https://typedoc-plugin-markdown.org/schema.json",
+  "entryPoints": ["src/index.ts"],
+  "plugin": ["typedoc-plugin-markdown"],
+  "out": "docs",
+  "outputFileStrategy": "modules",
+  "entryFileName": "options.md",
+  "readme": "none",
+  "disableSources": true,
+  "hidePageHeader": true,
+  "hideBreadcrumbs": true,
+  "interfacePropertiesFormat": "table",
+  "excludePrivate": true,
+  "treatWarningsAsErrors": true
+}

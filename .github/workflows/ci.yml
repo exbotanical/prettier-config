@@ -32,6 +32,9 @@ jobs:
       - name: Typecheck
         run: npm run typecheck
 
+      - name: Docs
+        run: npm run docs:check
+
   test:
     runs-on: ${{ matrix.os }}
 

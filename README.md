@@ -9,41 +9,31 @@ npm i -D prettier @exbotanical/prettier-config
 ```
 
 ```mjs
+// In prettier.config.mjs
 import exbotanical from '@exbotanical/prettier-config'
 
-export default exbotanical({
-  // ...options
+export default await exbotanical({
+  shell: true,
+  toml: { tableBlankLines: 2 },
 })
 ```
+
+`exbotanical` is a promise which resolves to a valid Prettier config object (Prettier also accepts an unresolved config promise as the default export).
 
 ## Plugins
 
-The `plugins` option enables per-language prettier plugins. All of these options are disabled by default. Each plugin is an optional peer dependency that must be installed alongside this package when enabled.
+Each key enables one plugin: pass `true` to use that plugin's defaults (as defined by _this_ package, not the upstream plugin's defaults - see [the config options docs](./docs/options.md)), and an object sets its options. Each plugin requires an optional peer dependency that must be installed when enabled.
 
-```bash
-npm i -D prettier-plugin-sh prettier-plugin-ini
-```
+| Key          | Package                                                      |
+| ------------ | ------------------------------------------------------------ |
+| `xml`        | `@prettier/plugin-xml`                                       |
+| `shell`      | `prettier-plugin-sh`                                         |
+| `docker`     | `prettier-plugin-sh`, which bundles its Dockerfile formatter |
+| `toml`       | `prettier-plugin-toml`                                       |
+| `ini`        | `prettier-plugin-ini`                                        |
+| `properties` | `prettier-plugin-properties`                                 |
+| `nginx`      | `prettier-plugin-nginx`                                      |
+| `sql`        | `prettier-plugin-sql`                                        |
+| `solidity`   | `prettier-plugin-solidity`                                   |
 
-```mjs
-export default exbotanical({
-  plugins: { shell: true, ini: true },
-})
-```
-
-| Option       | Package                      |
-| ------------ | ---------------------------- |
-| `xml`        | `@prettier/plugin-xml`       |
-| `shell`      | `prettier-plugin-sh`         |
-| `toml`       | `prettier-plugin-toml`       |
-| `nginx`      | `prettier-plugin-nginx`      |
-| `properties` | `prettier-plugin-properties` |
-| `sql`        | `prettier-plugin-sql`        |
-| `solidity`   | `prettier-plugin-solidity`   |
-| `ini`        | `prettier-plugin-ini`        |
-
-### Notes
-
-- The `ini` plugin also formats `.gitconfig` and `.editorconfig` files.
-- `plugins: 'all'` enables every plugin in the table that is installed.
-- An explicitly enabled plugin that is not installed will cause `exbotanical` to throw an error.
-- `exbotanical` returns each enabled plugin as an absolute path, resolved first from this package's install location and then from the current working directory.
+`core` overrides this config's Prettier core options. All options and their defaults are enumerated in [docs/options.md](docs/options.md).

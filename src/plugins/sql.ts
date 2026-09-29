@@ -1,6 +1,7 @@
 import { definePlugin, passThrough } from '../plugin-definition'
 
-type LetterCase = 'preserve' | 'upper' | 'lower'
+/** The case a sql option converts names to. */
+export type SqlLetterCase = 'preserve' | 'upper' | 'lower'
 
 /** Options for prettier-plugin-sql. */
 export interface OptionsSql {
@@ -42,25 +43,25 @@ export interface OptionsSql {
    * The case of SQL keywords.
    * @default 'preserve'
    */
-  keywordCase?: LetterCase
+  keywordCase?: SqlLetterCase
 
   /**
    * The case of data type names.
    * @default 'preserve'
    */
-  dataTypeCase?: LetterCase
+  dataTypeCase?: SqlLetterCase
 
   /**
    * The case of function names.
    * @default 'preserve'
    */
-  functionCase?: LetterCase
+  functionCase?: SqlLetterCase
 
   /**
    * The case of unquoted identifiers (experimental in the plugin).
    * @default 'preserve'
    */
-  identifierCase?: LetterCase
+  identifierCase?: SqlLetterCase
 
   /**
    * The indentation layout. The tabular styles put keywords in a fixed-width left column.
